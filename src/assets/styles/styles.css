@@ -1,0 +1,36 @@
+:root {
+  --color-blue: #5FA8F4;
+  --color-copper: #C18A39;
+  --color-accent: #D5C2B2;
+  --color-bg: #F1F6F9;
+  --color-dark: rgba(114, 122, 129, 0.324);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-dark);
+}
+
+h1, h2, h3 {
+  color: var(--color-copper);
+}
+
+.btn-primary {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+}
+
+.btn-primary:hover {
+  background-color: darken(var(--color-blue), 10%);
+}
+
+.transition-all {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.programa-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}

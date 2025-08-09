@@ -1,0 +1,34 @@
+/* 🎬 Clases base para AOS */
+
+.section-fade {
+  /* fadeUp de AOS */
+  [data-aos='fade-up'] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.feature-box {
+  /* aplica a bloques destacados */
+  [data-aos] {
+    transition: all 0.8s ease-in-out;
+  }
+}
+
+/* Puedes agregar más tipos aquí si los usas */
+[data-aos='fade-left'] {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+[data-aos='fade-right'] {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.hover-scale {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.hover-scale:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}

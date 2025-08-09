@@ -1,0 +1,121 @@
+/* src/assets/theme.css */
+
+/* 🎨 Colores base */
+:root {
+  --color-primary: #5FA8F4;     /* Azul suave */
+  --color-accent: #C18A39;      /* Dorado / Cobre */
+  --color-text-main: #36424B;   /* Gris oscuro legible */
+  --color-bg: #F1F6F9;          /* Fondo claro suave */
+  --color-muted: #D5C2B2;       /* Texto secundario claro */
+}
+
+/* ✍️ Tipografía base */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.6;
+}
+
+/* 🧱 Títulos */
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--color-accent);
+}
+
+h1 {
+  font-size: 2.8rem;
+}
+
+h2 {
+  font-size: 2.2rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+/* 🎯 Botones */
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #4f9dd6;
+  border-color: #4f9dd6;
+}
+
+/* Espaciados */
+.section {
+  padding: 4rem 0;
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+/* Colores personalizados */
+.text-copper {
+  color: #DAA520 !important; /* dorado más brillante */
+}
+
+.btn-outline-copper {
+  border: 1px solid #DAA520;
+  color: #DAA520;
+}
+
+.btn-outline-copper:hover {
+  background-color: #DAA520;
+  color: #fff;
+}
+
+.nav-link {
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.transition-all {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.text-navbar-light {
+  color: #f8f1e3 !important; /* texto visible sobre Hero 
+}
+
+.navbar.bg-transparent {
+  background-color: rgba(0, 0, 0, 0.2); /* sombra sutil */
+  backdrop-filter: blur(4px);
+}
+
+.hero-section {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+}
+
+
+@media (min-width: 768px) {
+  .hero-bg-zoom {
+    background-size: 110%;
+    animation: zoomInBackground 10s ease-in-out infinite alternate;
+  }
+
+  @keyframes zoomInBackground {
+    from {
+      background-size: 110%;
+    }
+    to {
+      background-size: 120%;
+    }
+  }
+}
+
+.bg-gradient-filosofia {
+  background: linear-gradient(
+    to bottom right,
+    #fdf6e3 0%,
+    #f7e5c0 100%
+  );
+}
