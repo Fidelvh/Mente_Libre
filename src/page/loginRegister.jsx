@@ -95,7 +95,7 @@ export default function LoginRegister() {
               </button>
             </form>
 
-            <div className="text-center mt-3">
+            <div className="text-center mt-4">
               <button className="btn btn-link" onClick={toggleForm}>
                 {isLogin
                   ? '¿No tienes cuenta? Regístrate aquí'
