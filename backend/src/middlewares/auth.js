@@ -4,7 +4,7 @@ import { prisma } from '../libs/prisma.js';
 export const requireAuth = async (req, res, next) => {
   try {
     const hdr = req.headers.authorization ?? '';
-    const token = hdr.startsWith('Bearer ') ? hdr.slice(7) : null;
+    const token = hdr.startsWith('Bearer') ? hdr.slice(7) : null;
     if (!token) return res.status(401).json({ error: 'Falta token Bearer' });
 
     const decoded = verifyJwt(token);

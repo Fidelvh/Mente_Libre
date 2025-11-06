@@ -1,7 +1,9 @@
+//backend/src/controllers/auth.controller.js
 import { prisma } from '../libs/prisma.js';
 import { hashPassword, verifyPassword } from '../utils/hash.js';
 import { signJwt } from '../utils/jwt.js';
 
+// Registro de un nuevo usuario
 export const register = async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
@@ -22,6 +24,7 @@ export const register = async (req, res, next) => {
   }
 };
 
+// Login de un usuario existente
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;

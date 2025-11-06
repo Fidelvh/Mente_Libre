@@ -1,3 +1,4 @@
+//backend/src/routes/auth.routes.js
 import { Router } from 'express';
 import { validate } from '../middlewares/validate.js';
 import { registerSchema, loginSchema } from '../schemas/auth.schema.js';

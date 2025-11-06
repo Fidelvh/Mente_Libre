@@ -12,7 +12,33 @@ export function buildApp() {
   const app = express();
 
   app.use(helmet());
-  app.use(cors({ origin: config.corsOrigin, credentials: true }));
+  // ✅ Configuración avanzada y flexible de CORS
+const isDev = config.env !== 'production';
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // permite herramientas locales (Postman, etc.)
+
+      // 🔓 En desarrollo: acepta cualquier puerto localhost dinámico
+      if (isDev && origin.startsWith('http://localhost')) {
+        return callback(null, true);
+      }
+
+      // 🔒 En producción: valida contra lista definida en .env
+      if (
+        Array.isArray(config.corsOrigin) &&
+        config.corsOrigin.includes(origin)
+      ) {
+        return callback(null, true);
+      }
+
+      // ❌ Bloquea cualquier otro origen
+      return callback(new Error(`Origen no permitido por CORS: ${origin}`));
+    },
+    credentials: true,
+  })
+);
   app.use(express.json({ limit: '1mb' }));
   app.use(
     pinoHttp({

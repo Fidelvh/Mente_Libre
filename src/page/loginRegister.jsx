@@ -1,38 +1,48 @@
-/**
- * LoginRegister.jsx
- *
- * Página combinada de inicio de sesión y registro.
- * El usuario puede alternar entre ambos formularios sin recargar la página.
- * Preparado para conectar con backend (autenticación y creación de cuenta).
- */
-
 import { useState } from 'react'
 import Layout from '../components/layout'
+import { useAuth } from '../context/authContext'
+import UserInfo from '../components/userInfo'
+
 
 export default function LoginRegister() {
+  const { login, register } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
     password: '',
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const toggleForm = () => setIsLogin((prev) => !prev)
+  const toggleForm = () => {
+    setError(null)
+    setIsLogin((prev) => !prev)
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const endpoint = isLogin ? '/api/login' : '/api/register'
-
-    // ⚠️ Aquí se conectará con tu backend Express más adelante
-    console.log(`POST a ${endpoint}`, formData)
-
-    alert(isLogin ? 'Inicio de sesión exitoso' : 'Registro exitoso')
-    setFormData({ nombre: '', email: '', password: '' })
+    setLoading(true)
+    setError(null)
+    try {
+      if (isLogin) {
+        await login(formData.email, formData.password)
+        alert('✅ Inicio de sesión exitoso')
+      } else {
+        await register(formData.nombre, formData.email, formData.password)
+        alert('✅ Registro exitoso')
+      }
+      setFormData({ nombre: '', email: '', password: '' })
+    } catch (err) {
+      setError('❌ ' + err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -90,10 +100,14 @@ export default function LoginRegister() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary w-100">
-                {isLogin ? 'Iniciar sesión' : 'Registrarse'}
+              {error && <p className="text-danger text-center">{error}</p>}
+
+              <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                {loading ? 'Procesando...' : isLogin ? 'Iniciar sesión' : 'Registrarse'}
               </button>
             </form>
+            <UserInfo />
+
 
             <div className="text-center mt-4">
               <button className="btn btn-link" onClick={toggleForm}>

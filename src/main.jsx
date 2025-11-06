@@ -10,6 +10,7 @@ import './assets/styles/styles.css'
 import './assets/styles/theme.css'
 import './assets/styles/animation.css'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './context/authContext'
 
 function Root() {
   useEffect(() => {
@@ -25,6 +26,8 @@ function Root() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Root />
+    <AuthProvider>
+      <Root />  
+    </AuthProvider>
   </React.StrictMode>
 )
