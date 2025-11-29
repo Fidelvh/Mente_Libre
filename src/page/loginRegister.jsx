@@ -1,124 +1,98 @@
-import { useState } from 'react'
-import Layout from '../components/layout'
-import { useAuth } from '../context/authContext'
-import UserInfo from '../components/userInfo'
-
+// src/page/LoginRegister.jsx
+import React, { useState } from "react";
+import { useAuth } from "@/context/authContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginRegister() {
-  const { login, register } = useAuth()
-  const [isLogin, setIsLogin] = useState(true)
-  const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    password: '',
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const { login, register } = useAuth();
+  const navigate = useNavigate();
 
-  const toggleForm = () => {
-    setError(null)
-    setIsLogin((prev) => !prev)
-  }
+  const [isRegister, setIsRegister] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
     try {
-      if (isLogin) {
-        await login(formData.email, formData.password)
-        alert('✅ Inicio de sesión exitoso')
+      if (isRegister) {
+        await register(form.name, form.email, form.password);
       } else {
-        await register(formData.nombre, formData.email, formData.password)
-        alert('✅ Registro exitoso')
+        await login(form.email, form.password);
       }
-      setFormData({ nombre: '', email: '', password: '' })
+
+      navigate("/dashboard");  // FIX
     } catch (err) {
-      setError('❌ ' + err.message)
-    } finally {
-      setLoading(false)
+      alert("Error: " + err.response?.data?.message || "Intenta nuevamente.");
     }
-  }
+  };
 
   return (
-    <Layout>
-      <section className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <div className="text-center mb-4">
-              <h2 className="text-copper fw-bold">
-                {isLogin ? 'Inicia sesión' : 'Crea una cuenta'}
-              </h2>
-              <p>
-                {isLogin
-                  ? 'Ingresa tus credenciales para continuar.'
-                  : 'Regístrate para acceder a todo el contenido.'}
-              </p>
+    <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
+
+        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
+          {isRegister ? "Crear cuenta" : "Iniciar sesión"}
+        </h2>
+
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+
+          {isRegister && (
+            <div>
+              <label className="block mb-1 text-gray-800 dark:text-gray-200 font-medium">Nombre completo</label>
+              <input
+                name="name"
+                onChange={handleChange}
+                value={form.name}
+                className="w-full px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 border"
+              />
             </div>
+          )}
 
-            <form onSubmit={handleSubmit} className="bg-light p-4 rounded shadow">
-              {!isLogin && (
-                <div className="mb-3">
-                  <label className="form-label">Nombre</label>
-                  <input
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-              )}
-
-              <div className="mb-3">
-                <label className="form-label">Correo electrónico</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Contraseña</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              {error && <p className="text-danger text-center">{error}</p>}
-
-              <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                {loading ? 'Procesando...' : isLogin ? 'Iniciar sesión' : 'Registrarse'}
-              </button>
-            </form>
-            <UserInfo />
-
-
-            <div className="text-center mt-4">
-              <button className="btn btn-link" onClick={toggleForm}>
-                {isLogin
-                  ? '¿No tienes cuenta? Regístrate aquí'
-                  : '¿Ya tienes cuenta? Inicia sesión'}
-              </button>
-            </div>
+          <div>
+            <label className="block mb-1 text-gray-800 dark:text-gray-200 font-medium">Correo</label>
+            <input
+              name="email"
+              onChange={handleChange}
+              value={form.email}
+              className="w-full px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 border"
+            />
           </div>
-        </div>
-      </section>
-    </Layout>
-  )
+
+          <div>
+            <label className="block mb-1 text-gray-800 dark:text-gray-200 font-medium">Contraseña</label>
+            <input
+              name="password"
+              type="password"
+              onChange={handleChange}
+              value={form.password}
+              className="w-full px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 border"
+            />
+          </div>
+
+          <button className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl">
+            {isRegister ? "Registrarse" : "Iniciar sesión"}
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-gray-600 dark:text-gray-300">
+          {isRegister ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
+          <span
+            className="text-indigo-500 cursor-pointer hover:underline"
+            onClick={() => setIsRegister(!isRegister)}
+          >
+            {isRegister ? "Inicia sesión" : "Regístrate aquí"}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
 }

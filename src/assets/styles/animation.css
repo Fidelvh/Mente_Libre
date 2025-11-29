@@ -1,5 +1,6 @@
-/* 🎬 Clases base para AOS */
 
+/*  src/assets/styles/animation.css */
+/* 🎬 Clases base para AOS */
 .section-fade {
   /* fadeUp de AOS */
   [data-aos='fade-up'] {

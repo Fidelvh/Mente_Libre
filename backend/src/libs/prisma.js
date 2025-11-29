@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../logger.js';
 
+console.log("Cargando prisma.js");
+
 export const prisma = new PrismaClient();
 
 // Captura de señal de terminación

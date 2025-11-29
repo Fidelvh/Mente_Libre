@@ -1,3 +1,4 @@
+//backend/src/app.js
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -7,6 +8,8 @@ import { logger } from './logger.js';
 import { apiRouter } from './routes/index.js';
 import { errorHandler } from './middlewares/error.js';
 import { prisma } from './libs/prisma.js';
+
+console.log("Cargando app.js");
 
 export function buildApp() {
   const app = express();
@@ -21,9 +24,7 @@ app.use(
       if (!origin) return callback(null, true); // permite herramientas locales (Postman, etc.)
 
       // 🔓 En desarrollo: acepta cualquier puerto localhost dinámico
-      if (isDev && origin.startsWith('http://localhost')) {
-        return callback(null, true);
-      }
+      if (isDev) return callback(null, true);
 
       // 🔒 En producción: valida contra lista definida en .env
       if (
@@ -73,3 +74,4 @@ app.use(
 
   return app;
 }
+

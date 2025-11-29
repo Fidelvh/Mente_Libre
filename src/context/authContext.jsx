@@ -1,82 +1,107 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+// src/context/authContext.jsx
+import { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  // ✅ Función para registrar
-  const register = async (nombre, email, password) => {
-    const res = await fetch('http://localhost:4000/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: nombre, email, password })
-    })
+  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+  const [loading, setLoading] = useState(true);
 
-    if (!res.ok) {
-      const errorData = await res.json()
-      throw new Error(errorData.error || 'Error en el registro')
-    }
-
-    const data = await res.json()
-    setUser(data.user)
-    setToken(data.token)
-    localStorage.setItem('token', data.token)
-  }
-
-  // ✅ Función para iniciar sesión
-  const login = async (email, password) => {
-    const res = await fetch('http://localhost:4000/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
-
-    if (!res.ok) {
-      const errorData = await res.json()
-      throw new Error(errorData.error || 'Error en el inicio de sesión')
-    }
-
-    const data = await res.json()
-    setUser(data.user)
-    setToken(data.token)
-    localStorage.setItem('token', data.token)
-  }
-
-  // ✅ Función para obtener el usuario autenticado desde el backend
-  const fetchMe = async () => {
-    if (!token) return
-    const res = await fetch('http://localhost:4000/api/auth/me', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-
-    if (res.ok) {
-      const data = await res.json()
-      setUser(data.user)
-    } else {
-      setUser(null)
-      localStorage.removeItem('token')
-      setToken(null)
-    }
-  }
-
-  // ✅ Cargar usuario automáticamente si hay token guardado
+  // Configurar axios UNA SOLA VEZ cuando cambie el token
   useEffect(() => {
-    fetchMe()
-  }, [token])
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("token", token);
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("token");
+    }
+  }, [token]);
 
+  // Obtener usuario autenticado
+  const fetchMe = async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await axios.get("http://localhost:4000/api/auth/me");
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    } catch (err) {
+      console.warn("⚠️ Token inválido, cerrando sesión.");
+      logout();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Ejecutar cuando cargue la página o cambie token
+  useEffect(() => {
+    fetchMe();
+  }, [token]);
+
+  // Registrar
+  const register = async (name, email, password) => {
+    const res = await axios.post("http://localhost:4000/api/auth/register", {
+      name,
+      email,
+      password,
+    });
+
+    const { user, token } = res.data;
+
+    setUser(user);
+    setToken(token);
+
+    return user;
+  };
+
+  // Login
+  const login = async (email, password) => {
+    const res = await axios.post("http://localhost:4000/api/auth/login", {
+      email,
+      password,
+    });
+
+    const { user, token } = res.data;
+
+    setUser(user);
+    setToken(token);
+
+    return user;
+  };
+
+  // Logout
   const logout = () => {
-    setUser(null)
-    setToken(null)
-    localStorage.removeItem('token')
-  }
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => useContext(AuthContext);

@@ -1,10 +1,9 @@
-import Layout from '../../components/layout'
-import CardPrograma from '../../components/cardProgramas'
-import eventosImg from '../../assets/programas/eventos.jpg'
+// src/page/programas/eventos.jsx
+import CardPrograma from '../../components/ui/cardProgramas'
+import eventosImg from '../../assets/images/programas/eventos.jpg'
 
 export default function Eventos() {
   return (
-    <Layout>
       <section className="container py-5 text-center">
         <h2 className="text-copper mb-3">Eventos y Talleres</h2>
         <p>
@@ -18,6 +17,5 @@ export default function Eventos() {
           link="#"
         />
       </section>
-    </Layout>
   )
 }

@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { deleteUser, listUsers, createUser } from '../controllers/users.controller.js';
 import { requireAuth } from '../middlewares/auth.js';
 
+
 export const userRouter = Router();
 
 
-// Crear nuevo usuario, Rutas públicas
+//  Rutas públicas, Crear nuevo usuario,
 userRouter.post('/', createUser);
 
 // 🔐 Rutas protegidas (solo admin o usuarios logueados)

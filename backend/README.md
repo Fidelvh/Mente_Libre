@@ -18,4 +18,17 @@ brew services stop postgresql@15
 brew services start postgresql@15
 brew services restart postgresql@15
 
+psql -h localhost -U filo -d mente_libre
+
+
 ALTER USER filo WITH PASSWORD 'MenteLibre2025';
+SELECT "id", "email", LEFT("passwordHash", 25) || '...' AS hash_preview FROM "User";
+SELECT "id", "email" FROM "User";
+
+
+git checkout main
+git merge dev
+git push
+
+git branch
+

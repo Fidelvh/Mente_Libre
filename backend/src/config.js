@@ -1,5 +1,8 @@
 import 'dotenv/config';
 
+console.log("Cargando config.js");
+
+
 export const config = {
   env: process.env.NODE_ENV ?? 'development',
   port: Number(process.env.PORT ?? 4000),

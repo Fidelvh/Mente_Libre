@@ -14,10 +14,10 @@ export const register = async (req, res, next) => {
     const passwordHash = await hashPassword(password);
     const user = await prisma.user.create({
       data: { email, passwordHash, name: name ?? null },
-      select: { id: true, email: true, name: true, createdAt: true }
+      select: { id: true, email: true, name: true, createdAt: true, updatedAt: true,  role: true }
     });
 
-    const token = signJwt({ sub: user.id, email: user.email });
+    const token = signJwt({ sub: user.id, email: user.email, role: user.role });
     res.status(201).json({ user, token });
   } catch (err) {
     next(err);
@@ -34,9 +34,9 @@ export const login = async (req, res, next) => {
     const ok = await verifyPassword(password, user.passwordHash);
     if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' });
 
-    const token = signJwt({ sub: user.id, email: user.email });
+    const token = signJwt({ sub: user.id, email: user.email, role: user.role });
     res.json({
-      user: { id: user.id, email: user.email, name: user.name },
+      user: { id: user.id, email: user.email, name: user.name, createdAt: user.createdAt, updatedAt: user.updatedAt, role: user.role },
       token
     });
   } catch (err) {

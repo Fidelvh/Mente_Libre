@@ -1,33 +1,26 @@
-import React, { useEffect } from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
-import 'bootstrap-icons/font/bootstrap-icons.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './assets/styles/styles.css'
-import './assets/styles/theme.css'
-import './assets/styles/animation.css'
-import { BrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './context/authContext'
+// src/main.jsx
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import "./index.css"; // <<< unificado
+import { BrowserRouter } from "react-router-dom";
+
+import { AuthProvider } from "@/context/authContext";
+
 
 function Root() {
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true })
-  }, [])
-
+  useEffect(() => { AOS.init({ duration: 1000, once: true }); }, []);
   return (
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  )
+  );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <Root />  
-    </AuthProvider>
+    <AuthProvider><Root /></AuthProvider>
   </React.StrictMode>
-)
+);

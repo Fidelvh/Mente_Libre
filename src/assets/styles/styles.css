@@ -1,36 +1,18 @@
-:root {
-  --color-blue: #5FA8F4;
-  --color-copper: #C18A39;
-  --color-accent: #D5C2B2;
-  --color-bg: #F1F6F9;
-  --color-dark: rgba(114, 122, 129, 0.324);
+/* src/assets/styles/styles.css - version minimal para Tailwind */
+:root{
+  --ml-copper: #C89A66;
+  --ml-beige: #D9C7B8;
+  --ml-white: #F5F3EF;
+  --ml-deep: #364155;
 }
 
-body {
-  background-color: var(--color-bg);
-  color: var(--color-dark);
-}
+/* Reset muy simple ya que Tailwind hace lo suyo */
+html,body,#root { height:100%; }
 
-h1, h2, h3 {
-  color: var(--color-copper);
-}
+/* Helpers (solo cuando necesitemos algo rápido) */
+.hidden-scroll { overflow: hidden; }
 
-.btn-primary {
-  background-color: var(--color-blue);
-  border-color: var(--color-blue);
-}
+/* Imagenes en sidebar */
+.sidebar-logo { object-fit: cover; }
 
-.btn-primary:hover {
-  background-color: darken(var(--color-blue), 10%);
-}
-
-.transition-all {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.programa-img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
+/* Evitar reglas globales que colisionen con Tailwind: NO usar .container, .card, .btn, etc. */

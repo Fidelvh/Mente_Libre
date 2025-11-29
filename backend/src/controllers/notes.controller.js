@@ -1,5 +1,7 @@
 import { prisma } from '../libs/prisma.js';
 
+
+// Listar todas las notas del usuario autenticado
 export const listNotes = async (req, res, next) => {
   try {
     const notes = await prisma.note.findMany({

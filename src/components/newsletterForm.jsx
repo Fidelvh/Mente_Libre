@@ -1,3 +1,5 @@
+
+// src/components/newsletterForm.jsx
 import React, { useState } from 'react'
 
 export default function NewsletterForm() {

@@ -1,60 +1,50 @@
-import React from 'react'
+import { motion } from "framer-motion";
 
-export default function Filosofia() {
+export default function FilosofiaPage() {
   return (
-    <section className="section bg-gradient-filosofia bg-white text-center section-fade">
+    <div className="max-w-6xl mx-auto px-4 py-16">
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-4xl font-bold mb-6"
+      >
+        Nuestra Filosofía
+      </motion.h1>
 
-      <div className="container">
-        <h2 className="mb-4 text-accent" data-aos="fade-up">
-          Nuestra Filosofía
-        </h2>
-        <p className="lead mb-5" data-aos="fade-up" data-aos-delay="100">
-          En Mente Libre creemos que el autoconocimiento, la música, la psicología
-          y la espiritualidad no son caminos separados, sino expresiones complementarias
-          del mismo viaje interior.
-        </p>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-lg opacity-90 leading-relaxed"
+      >
+        En Mente Libre creemos que la sanación emocional, la claridad mental y el
+        autoconocimiento son pilares para una vida plena. Creamos herramientas que
+        combinan tecnología, espiritualidad y psicología moderna para ayudarte a
+        transformar tu bienestar de forma profunda.
+      </motion.p>
 
-        <div className="row">
-          <div
-            className="col-md-4 mb-5 d-flex flex-column align-items-center feature-box"
-            data-aos="fade-up"
-            data-aos-delay="200"
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-10 grid md:grid-cols-3 gap-6"
+      >
+        {[
+          "Conexión interior",
+          "Sanación emocional",
+          "Crecimiento consciente",
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            className="p-6 bg-gray-800 rounded-2xl border border-gray-700 text-center"
           >
-            <i className="bi bi-person-hearts display-4 text-copper mb-3"></i>
-            <h4 className="text-copper">Psicología</h4>
-            <p className="text-center px-3">
-              Usamos la psicología para explorar emociones, patrones de conducta
-              y heridas personales. Buscamos transformación auténtica desde la raíz.
+            <h3 className="text-xl font-semibold mb-2">{item}</h3>
+            <p className="text-sm opacity-80">
+              Parte fundamental del camino hacia una vida más plena.
             </p>
-          </div>
-
-          <div
-            className="col-md-4 mb-5 d-flex flex-column align-items-center feature-box"
-            data-aos="fade-up"
-            data-aos-delay="300"
-          >
-            <i className="bi bi-stars display-4 text-copper mb-3"></i>
-            <h4 className="text-copper">Espiritualidad</h4>
-            <p className="text-center px-3">
-              Nos basamos en una espiritualidad sin dogmas, enfocada en la conexión
-              interior, el propósito y la autenticidad.
-            </p>
-          </div>
-
-          <div
-            className="col-md-4 mb-5 d-flex flex-column align-items-center feature-box"
-            data-aos="fade-up"
-            data-aos-delay="400"
-          >
-            <i className="bi bi-diagram-3 display-4 text-copper mb-3"></i>
-            <h4 className="text-copper">Neurociencia</h4>
-            <p className="text-center px-3">
-              Aplicamos la neurociencia para comprender la mente y formar hábitos
-              sostenibles que potencien el bienestar personal.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  );
 }

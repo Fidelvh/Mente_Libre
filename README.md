@@ -15,3 +15,6 @@ If you are developing a production application, we recommend using TypeScript wi
 npm install express cors helmet dotenv jsonwebtoken bcrypt winston
 npm install @prisma/client
 npm install -D typescript ts-node-dev prisma @types/express @types/jsonwebtoken @types/bcrypt @types/cors
+
+//lsof -i :4000  
+kill -9

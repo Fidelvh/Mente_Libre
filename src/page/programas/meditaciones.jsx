@@ -1,10 +1,9 @@
-import Layout from "../../components/layout"
-import CardPrograma from "../../components/cardProgramas"
-import meditacionImg from "../../assets/programas/meditacion.png"
+// src/page/programas/meditaciones.jsx
+import CardPrograma from "../../components/ui/cardProgramas"
+import meditacionImg from "../../assets/images/programas/meditacion.png"
 
 export default function Meditaciones() {
   return (
-    <Layout>
       <section className="container py-5 text-center">
         <h2 className="text-copper mb-3">Meditaciones Guiadas</h2>
         <p>
@@ -18,6 +17,5 @@ export default function Meditaciones() {
           link="#"
         />
       </section>
-    </Layout>
   )
 }

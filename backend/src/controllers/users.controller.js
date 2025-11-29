@@ -2,6 +2,7 @@ import { prisma } from '../libs/prisma.js';
 import { hashPassword } from '../utils/hash.js';
 import { signJwt } from '../utils/jwt.js';
 
+// Crear nuevo usuario (Público)
 export const createUser = async (req, res) => {
   try {
     const { email, password, name } = req.body;
@@ -30,12 +31,14 @@ export const createUser = async (req, res) => {
         id: true,
         email: true,
         name: true,
-        createdAt: true
+        createdAt: true,
+        updatedAt: true,
+        role: true
       }
     });
 
     // Generar token JWT
-    const token = signJwt({ sub: user.id, email: user.email });
+    const token = signJwt({ sub: user.id, email: user.email, role: user.role });
 
     return res.status(201).json({
       message: 'Usuario creado exitosamente',

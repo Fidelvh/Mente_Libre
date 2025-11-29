@@ -1,10 +1,9 @@
-import Layout from '../../components/layout'
-import CardPrograma from '../../components/cardProgramas'
-import audioImg from '../../assets/programas/audio.jpg'
+// src/page/programas/audio.jsx
+import CardPrograma from '../../components/ui/cardProgramas'
+import audioImg from '../../assets/images/programas/audio.jpg'
 
 export default function Audio() {
   return (
-    <Layout>
       <section className="container py-5">
         <h2 className="text-center text-copper mb-4">Programas de Audio</h2>
         <p className="text-center text-muted mb-5"> 
@@ -29,6 +28,5 @@ export default function Audio() {
           link="/programas/audio"
         />
       </section>
-    </Layout>
   )
 }

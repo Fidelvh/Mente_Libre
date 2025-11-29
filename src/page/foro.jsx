@@ -1,4 +1,4 @@
-import Layout from '../components/layout'
+// src/page/foro.jsx
 
 export default function Foro() {
   const temasEjemplo = [
@@ -26,7 +26,6 @@ export default function Foro() {
   ]
 
   return (
-    <Layout>
       <section className="container py-5">
         <h2 className="text-center text-copper mb-4">Foro de Conversación</h2>
 
@@ -50,6 +49,6 @@ export default function Foro() {
           ))}
         </div>
       </section>
-    </Layout>
   )
 }
+

@@ -1,7 +1,7 @@
 import React from 'react'
-import meditacionImg from '../assets/programas/meditacion.png'
-import audioImg from '../assets/programas/audio.jpg'
-import eventosImg from '../assets/programas/eventos.jpg'
+import meditacionImg from '@/assets/images/programas/meditacion.png'
+import audioImg from '../assets/images/programas/audio.jpg'
+import eventosImg from '../assets/images/programas/eventos.jpg'
 import { Link } from 'react-router-dom'
 
 export default function Programas() {
