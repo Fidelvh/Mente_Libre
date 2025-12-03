@@ -1,7 +1,7 @@
-// src/components/sidebar.jsx
+// src/pages/user/dashboard/Sidebar.jsx
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "@/context/authContext.jsx";
 
 const Sidebar = ({ collapsed, onToggle }) => {
   const { user } = useAuth();

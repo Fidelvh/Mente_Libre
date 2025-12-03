@@ -1,5 +1,4 @@
-
-// src/page/admin/adminPanel.jsx
+// src/pages/admin/adminPanel.jsx
 import { useEffect, useState } from "react";
 
 const AdminPanel = () => {

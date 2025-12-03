@@ -1,4 +1,4 @@
-// src/components/layouts/footer.jsx
+// src/components/navigation/footer.jsx
 import { Link } from "react-router-dom";
 import { Instagram } from "lucide-react";
 

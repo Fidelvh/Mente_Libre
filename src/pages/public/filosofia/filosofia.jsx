@@ -1,3 +1,4 @@
+// src/pages/public/filosofia/filosofia.jsx
 import { motion } from "framer-motion";
 
 export default function FilosofiaPage() {

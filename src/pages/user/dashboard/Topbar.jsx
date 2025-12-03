@@ -1,6 +1,6 @@
-// src/components/topbar.jsx
+// src/pages/user/dashboard/Topbar.jsx
 import React from "react";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "@/context/authContext.jsx";
 
 const Topbar = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();

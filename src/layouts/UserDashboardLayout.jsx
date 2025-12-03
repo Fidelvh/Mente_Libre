@@ -1,6 +1,7 @@
-// src/page/user/dashboard.jsx
-import { useAuth } from "@/context/authContext";
+// src/layouts/UserDashboardLayout.jsx
+import { useAuth } from "@/context/authContext.jsx";
 import { Link } from "react-router-dom";
+import Footer from "@/components/navigation/Footer.jsx";
 
 export default function Dashboard() {
   const { user } = useAuth();

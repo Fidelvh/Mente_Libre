@@ -1,6 +1,6 @@
-// src/page/programas/eventos.jsx
-import CardPrograma from '../../components/ui/cardProgramas'
-import eventosImg from '../../assets/images/programas/eventos.jpg'
+// src/pages/public/programas/eventos.jsx
+import CardPrograma from '@/components/ui/cardProgramas'
+import eventosImg from '@/assets/images/programas/eventos.jpg'
 
 export default function Eventos() {
   return (

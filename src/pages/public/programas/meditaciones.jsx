@@ -1,6 +1,6 @@
-// src/page/programas/meditaciones.jsx
-import CardPrograma from "../../components/ui/cardProgramas"
-import meditacionImg from "../../assets/images/programas/meditacion.png"
+// src/pages/public/programas/meditaciones.jsx
+import CardPrograma from "@/components/ui/cardProgramas"
+import meditacionImg from "@/assets/images/programas/meditacion.png"
 
 export default function Meditaciones() {
   return (
