@@ -1,3 +1,4 @@
+// src/pages/user/dashboard/DashboardForo.jsx
 export default function Foro() {
   return (
     <div className="text-gray-800 dark:text-gray-100">

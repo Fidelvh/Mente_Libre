@@ -1,4 +1,5 @@
-import { useAuth } from "@/context/authContext";
+// src/pages/user/dashboard/DashboardPerfil.jsx
+import { useAuth } from "@/context/authContext.jsx";
 import { useState } from "react";
 
 export default function Perfil() {

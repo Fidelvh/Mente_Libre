@@ -1,4 +1,4 @@
-// src/components/dashboard/misProgramas.jsx
+// src/pages/user/dashboard/DashboardProgramas.jsx
 import { useSearchParams } from "react-router-dom";
 
 export default function MisProgramas() {

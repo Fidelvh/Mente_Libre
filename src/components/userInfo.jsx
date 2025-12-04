@@ -1,4 +1,5 @@
-import { useAuth } from '../context/authContext'
+// src/components/userInfo.jsx
+import { useAuth } from '@/context/authContext.jsx'
 
 export default function UserInfo() {
   const { user, logout } = useAuth()

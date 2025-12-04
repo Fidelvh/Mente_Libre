@@ -1,6 +1,6 @@
-// src/page/LoginRegister.jsx
+// src/pages/user/loginRegister.jsx
 import React, { useState } from "react";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/authContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginRegister() {

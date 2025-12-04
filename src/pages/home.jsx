@@ -1,9 +1,10 @@
 // src/page/home.jsx
 import React from "react";
 import heroImg from "@/assets/images/cordillera.png"; 
-import Programas from "@/components/programas";
-import Filosofia from "@/components/filosofia";
-import NewsletterForm from "@/components/newsletterForm";
+import Programas from "@/pages/public/programas/programas.jsx";
+import Filosofia from "@/pages/public/filosofia/filosofia.jsx";
+import Eventos from "@/pages/public/programas/eventos.jsx";
+import NewsletterForm from "@/components/newsletterForm.jsx";
 
 export default function Home() {
   return (

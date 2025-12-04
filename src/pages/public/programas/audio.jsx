@@ -1,6 +1,6 @@
-// src/page/programas/audio.jsx
-import CardPrograma from '../../components/ui/cardProgramas'
-import audioImg from '../../assets/images/programas/audio.jpg'
+// src/pages/public/programas/audio.jsx
+import CardPrograma from '@/components/ui/cardProgramas.jsx'
+import audioImg from '@/assets/images/programas/audio.jpg'
 
 export default function Audio() {
   return (

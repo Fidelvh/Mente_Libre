@@ -32,3 +32,5 @@ git push
 
 git branch
 
+lsof -i :4000  
+kill -9

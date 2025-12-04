@@ -1,5 +1,6 @@
+// src/pages/admin/adminRoute.jsx
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/authContext';
+import { useAuth } from '@/context/authContext.jsx';
 
 export default function AdminRoute() {
   const { user } = useAuth();

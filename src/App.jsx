@@ -1,22 +1,36 @@
 // src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "@/page/home";
-import Audio from "@/page/programas/audio";
-import Meditaciones from "@/page/programas/meditaciones";
-import Eventos from "@/page/programas/eventos";
-import Foro from "@/page/foro";
-import Contacto from "@/page/contacto";
-import LoginRegister from "@/page/loginRegister";
-import Filosofia from "@/components/filosofia";
-import Dashboard from "@/page/user/dashboard";
-import AdminPanel from "@/page/admin/adminPanel";
-import MainLayout from "@/components/layouts/MainLayout";
-import UserDashboardLayout from "@/components/dashboard/userDashboardLayout";
-import UserRoute from "@/components/auth/userRoute";
-import Programas from "@/components/dashboard/programas";
-import Perfil from "@/components/dashboard/perfil";
-import Progreso from "@/components/dashboard/progreso"; 
+// Public Pages
+import Home from "@/pages/home.jsx";
+import Contacto from "@/pages/contacto.jsx";
+import Foro from "@/pages/foro.jsx";
+import Filosofia from "@/pages/public/filosofia/filosofia.jsx";
+
+// Program Pages public
+import Audio from "@/pages/public/programas/audio.jsx";
+import Meditaciones from "@/pages/public/programas/meditaciones.jsx";
+import Eventos from "@/pages/public/programas/eventos.jsx";
+import Programas from "@/pages/public/programas/programas.jsx";
+
+// Auth Pages
+import LoginRegister from "@/pages/user/loginRegister.jsx";
+
+// User Pages dashboard
+import DashboardHome from "@/pages/user/dashboard/DashboardHome.jsx";
+import DashboardForo from "@/pages/user/dashboard/DashboardForo.jsx";
+import DashboardPerfil from "@/pages/user/dashboard/DashboardPerfil.jsx";
+import DashboardProgramas from "@/pages/user/dashboard/DashboardProgramas.jsx";
+import DashboardProgreso from "@/pages/user/dashboard/DashboardProgreso.jsx";
+
+// Layouts and Components
+import MainLayout from "@/layouts/MainLayout.jsx";
+import UserDashboardLayout from "@layouts/UserDashboardLayout.jsx";
+
+// Route Guards
+import ProtectedRoute from "@/components/auth/protectedRoute.jsx";
+import AdminPanel from "@/pages/admin/adminPanel.jsx";
+import UserRoute from "@/components/auth/userRoute.jsx";
 
 
 
@@ -35,34 +49,34 @@ export default function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/contacto" element={<Contacto />} />
+        <Route path="/foro" element={<Foro />} />
         <Route path="/filosofia" element={<Filosofia />} />
+
+
+        <Route path="/programas" element={<Programas />} />
         <Route path="/programas/audio" element={<Audio />} />
         <Route path="/programas/meditaciones" element={<Meditaciones />} />
         <Route path="/programas/eventos" element={<Eventos />} />
-        <Route path="/foro" element={<Foro />} />
+
+
         <Route path="/login-register" element={<LoginRegister />} />
-      {/*   <Route path="/programas" element={<Programas />} />
-        <Route path="progreso" element={<Progreso/>} />
-        <Route path="perfil" element={<Perfil/>} /> */}
+        
       </Route>
 
-      {/* USER */}
-      <Route path="/dashboard/*" element={
-          <UserRoute>
-            <UserDashboardLayout />
-          </UserRoute>
-        }/>
-        <Route path="/dashboard/programas" element={
-          <UserRoute>
-            <Programas />
-          </UserRoute>}/>
 
-        <Route path="/dashboard/progreso" element={
-           <UserRoute>
-            <Programas />
-          </UserRoute>}/>
-        
-        <Route path="/dashboard/perfil" element={<Perfil/>} />
+      {/* USER DASHBOARD*/}
+      <Route path="/dashboard/*" element={
+          <ProtectedRoute>
+            <UserDashboardLayout />
+          </ProtectedRoute>
+        }>
+
+        <Route index element={<DashboardHome />} />
+        <Route path="foro" element={<DashboardForo /> }/>
+        <Route path="perfil" element={<DashboardPerfil />} />
+        <Route path="programas" element={<DashboardProgramas />} />
+        <Route path="progreso" element={<DashboardProgreso />} />
+      </Route>
     
 
       {/* ADMIN */}
@@ -74,6 +88,9 @@ export default function App() {
           </AdminRoute>
         }
       />
+
+      {/* FALLBACK */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

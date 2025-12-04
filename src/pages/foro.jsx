@@ -1,4 +1,4 @@
-// src/page/foro.jsx
+// src/pages/foro.jsx
 
 export default function Foro() {
   const temasEjemplo = [
