@@ -9,7 +9,7 @@ import { apiRouter } from './routes/index.js';
 import { errorHandler } from './middlewares/error.js';
 import { prisma } from './libs/prisma.js';
 
-console.log("Cargando app.js");
+//console.log("Cargando app.js");
 
 export function buildApp() {
   const app = express();

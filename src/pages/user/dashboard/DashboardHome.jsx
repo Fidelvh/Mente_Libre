@@ -2,7 +2,7 @@
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/authContext.jsx";
 import Logo from "@/assets/images/Diseno-Logo-ML.png";
-import Footer from "@/components/layouts/footer";
+import Footer from "@/components/navigation/footer.jsx";
 
 export default function UserDashboardLayout() {
   const { user, logout } = useAuth();

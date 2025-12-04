@@ -3,7 +3,7 @@ import React from "react";
 import heroImg from "@/assets/images/cordillera.png"; 
 import Programas from "@/pages/public/programas/programas.jsx";
 import Filosofia from "@/pages/public/filosofia/filosofia.jsx";
-import Eventos from "@/pages/public/eventos/eventos.jsx";
+import Eventos from "@/pages/public/programas/eventos.jsx";
 import NewsletterForm from "@/components/newsletterForm.jsx";
 
 export default function Home() {

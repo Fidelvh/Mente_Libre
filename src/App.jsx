@@ -5,16 +5,16 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/home.jsx";
 import Contacto from "@/pages/contacto.jsx";
 import Foro from "@/pages/foro.jsx";
-import Filosofia from "@/components/filosofia.jsx";
+import Filosofia from "@/pages/public/filosofia/filosofia.jsx";
 
 // Program Pages public
 import Audio from "@/pages/public/programas/audio.jsx";
 import Meditaciones from "@/pages/public/programas/meditaciones.jsx";
 import Eventos from "@/pages/public/programas/eventos.jsx";
-import Programas from "@/components/user/dashboard/DashboardProgramas.jsx";
+import Programas from "@/pages/public/programas/programas.jsx";
 
 // Auth Pages
-import LoginRegister from "@/pages/loginRegister.jsx";
+import LoginRegister from "@/pages/user/loginRegister.jsx";
 
 // User Pages dashboard
 import DashboardHome from "@/pages/user/dashboard/DashboardHome.jsx";
@@ -22,17 +22,15 @@ import DashboardForo from "@/pages/user/dashboard/DashboardForo.jsx";
 import DashboardPerfil from "@/pages/user/dashboard/DashboardPerfil.jsx";
 import DashboardProgramas from "@/pages/user/dashboard/DashboardProgramas.jsx";
 import DashboardProgreso from "@/pages/user/dashboard/DashboardProgreso.jsx";
-import Dashboard from "@/pages/user/dashboard"; // <-- revisar se cambio la pagina
 
 // Layouts and Components
-import MainLayout from "@/components/layouts/MainLayout.jsx";
-import UserDashboardLayout from "@/components/user/dashboard/userDashboardLayout.jsx";
+import MainLayout from "@/layouts/MainLayout.jsx";
+import UserDashboardLayout from "@layouts/UserDashboardLayout.jsx";
 
 // Route Guards
+import ProtectedRoute from "@/components/auth/protectedRoute.jsx";
 import AdminPanel from "@/pages/admin/adminPanel.jsx";
 import UserRoute from "@/components/auth/userRoute.jsx";
-import Perfil from "@/components/user/dashboard/DashboardPerfil.jsx";
-import Progreso from "@/components/user/dashboard/DashboardProgreso.jsx"; 
 
 
 
