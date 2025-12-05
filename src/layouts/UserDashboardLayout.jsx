@@ -1,76 +1,68 @@
 // src/layouts/UserDashboardLayout.jsx
 import { useAuth } from "@/context/authContext.jsx";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
+import Logo from "@/assets/images/Diseno-Logo-ML.png";
 import Footer from "@/components/navigation/footer.jsx";
 
-export default function Dashboard() {
-  const { user } = useAuth();
+export default function UserDashboardLayout() {
+  const { user, logout } = useAuth();
 
   return (
-    <div className="p-6 text-gray-800 dark:text-gray-100">
+    <div className="h-screen w-screen flex bg-slate-950 text-white overflow-hidden">
 
-      {/* HEADER */}
-      <header className="mb-6">
-        <h2 className="text-3xl font-bold">Hola, {user?.name || "Usuario"} 👋</h2>
-        <p className="text-gray-500 dark:text-gray-400">
-          Bienvenido a tu espacio personal en Mente Libre.
-        </p>
-      </header>
+      {/* SIDEBAR FIJA */}
+      <aside className="w-64 flex flex-col bg-slate-900 border-r border-slate-800 p-6">
 
-      {/* ACCESOS RÁPIDOS */}
-      <section className="mb-8">
-        <h3 className="text-xl font-semibold mb-3">Accesos rápidos</h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          
-          {/* Meditaciones */}
-          <Link
-            to="/dashboard/mis-programas?tab=meditaciones"
-            className="p-5 rounded-xl shadow bg-white dark:bg-gray-800 hover:shadow-lg transition"
-          >
-            <h4 className="font-bold">Meditaciones</h4>
-            <p>Explora meditaciones guiadas.</p>
-          </Link>
-
-          {/* Audios */}
-          <Link
-            to="/dashboard/mis-programas?tab=audios"
-            className="p-5 rounded-xl shadow bg-white dark:bg-gray-800 hover:shadow-lg transition"
-          >
-            <h4 className="font-bold">Audios</h4>
-            <p>Contenido sonoro para tu bienestar.</p>
-          </Link>
-
-          {/* Eventos */}
-          <Link
-            to="/dashboard/mis-programas?tab=eventos"
-            className="p-5 rounded-xl shadow bg-white dark:bg-gray-800 hover:shadow-lg transition"
-          >
-            <h4 className="font-bold">Eventos</h4>
-            <p>Charlas, talleres y actividades.</p>
-          </Link>
-
-          {/* Foro */}
-          <Link
-            to="/dashboard/foro"
-            className="p-5 rounded-xl shadow bg-white dark:bg-gray-800 hover:shadow-lg transition"
-          >
-            <h4 className="font-bold">Foro</h4>
-            <p>Comparte y conecta.</p>
-          </Link>
+        {/* LOGO */}
+        <div className="flex items-center gap-2 mb-10">
+          <img
+            src={Logo}
+            alt="Mente Libre"
+            className="w-16 h-16 p-1 rounded-3xl object-contain drop-shadow-lg bg-gray-100/40 dark:bg-transparent"
+            whileHover={{ scale: 1.20, rotate: 1 }}
+            transition={{ type: "spring", stiffness: 200 }}
+          />
+          <span className="text-lg font-bold text-emerald-400">
+            Mente Libre
+          </span>
         </div>
-      </section>
 
-      {/* PERFIL */}
-      <section>
-        <h3 className="text-xl font-semibold mb-3">Tu Perfil</h3>
-        <Link
-          to="/dashboard/perfil"
-          className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        {/* MENÚ */}
+        <nav className="flex flex-col gap-4 text-sm">
+          <Link to="/dashboard" className="hover:text-emerald-400 ">Inicio</Link>
+          <Link to="/dashboard/programas" className="hover:text-emerald-400">Mis Programas</Link>
+          <Link to="/dashboard/foro" className="hover:text-emerald-400">Foro</Link>
+          <Link to="/dashboard/memoria" className="hover:text-emerald-400">Memoria Viva</Link>
+          <Link to="/dashboard/progreso" className="hover:text-emerald-400">Mi Progreso</Link>
+          <Link to="/dashboard/perfil" className="hover:text-emerald-400">Mi Perfil</Link>
+        </nav>
+
+        {/* LOGOUT FIJO ABAJO */}
+        <button
+          onClick={logout}
+          className="mt-auto bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition"
         >
-          Editar Perfil
-        </Link>
-      </section>
+          Cerrar sesión
+        </button>
+      </aside>
+
+      {/* CONTENIDO PRINCIPAL */}
+      <main className="flex-1 overflow-y-auto p-8 bg-gradient-to-br from-slate-950 to-slate-900">
+
+        {/* HEADER SUPERIOR */}
+        <header className="mb-10">
+          <h1 className="text-2xl font-bold">
+            Hola, {user?.name || "Usuario"} 👋
+          </h1>
+          <p className="text-slate-400">
+            Este es tu espacio personal en Mente Libre.
+          </p>
+        </header>
+
+        {/* RUTAS HIJAS: DashboardHome, Memoria, Perfil, etc */}
+        <Outlet />
+
+      </main>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 // backend/src/middlewares/role.js
 
+// backend/src/middlewares/role.js
 export const requireAdmin = (req, res, next) => {
-  if (req.user?.role === 'admin') {
-    return next()
-  }
-  return res.status(403).json({ error: 'Acceso denegado: solo administradores' })
-}
- 
+  if (!req.user) return res.status(401).json({ error: "No autorizado" });
+  if (req.user.role !== "admin") return res.status(403).json({ error: "Requiere rol admin" });
+  next();
+};
+
+  

@@ -1,4 +1,3 @@
-// src/context/authContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -13,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
 
-  // Configurar axios UNA SOLA VEZ cuando cambie el token
+  // ✅ Configurar axios automáticamente cuando cambie el token
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -24,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Obtener usuario autenticado
+  // ✅ FUNCIÓN ASYNC CORRECTA (AQUÍ ESTABA EL ERROR)
   const fetchMe = async () => {
     if (!token) {
       setLoading(false);
@@ -32,9 +31,18 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.get("http://localhost:4000/api/auth/me");
-      setUser(res.data.user);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      const res = await axios.get(
+        "http://localhost:4000/api/auth/me",
+        {
+          headers: { "Cache-Control": "no-cache" }
+        }
+      );
+
+      console.log("✅ USER DESDE /auth/me:", res.data);
+
+      setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
+
     } catch (err) {
       console.warn("⚠️ Token inválido, cerrando sesión.");
       logout();
@@ -43,12 +51,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Ejecutar cuando cargue la página o cambie token
+  // ✅ Ejecutar al cargar o cambiar token
   useEffect(() => {
     fetchMe();
   }, [token]);
 
-  // Registrar
+  // ✅ Registro
   const register = async (name, email, password) => {
     const res = await axios.post("http://localhost:4000/api/auth/register", {
       name,
@@ -64,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     return user;
   };
 
-  // Login
+  // ✅ Login
   const login = async (email, password) => {
     const res = await axios.post("http://localhost:4000/api/auth/login", {
       email,
@@ -79,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     return user;
   };
 
-  // Logout
+  // ✅ Logout
   const logout = () => {
     setUser(null);
     setToken(null);

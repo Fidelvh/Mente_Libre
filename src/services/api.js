@@ -3,6 +3,7 @@
 
 const API_URL = 'http://localhost:4000/api';
 
+
 export const apiRequest = async (endpoint, method = 'GET', body = null, token = null) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -15,8 +16,15 @@ export const apiRequest = async (endpoint, method = 'GET', body = null, token = 
     body: body ? JSON.stringify(body) : null,
   });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Error en la solicitud');
-  return data;
+  let data = null;
+const text = await res.text();
+
+if (text) {
+  data = JSON.parse(text);
+}
+
+if (!res.ok) throw new Error(data?.error || 'Error en la solicitud');
+return data;
+
 };
 

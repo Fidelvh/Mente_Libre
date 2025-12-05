@@ -22,23 +22,33 @@ import DashboardForo from "@/pages/user/dashboard/DashboardForo.jsx";
 import DashboardPerfil from "@/pages/user/dashboard/DashboardPerfil.jsx";
 import DashboardProgramas from "@/pages/user/dashboard/DashboardProgramas.jsx";
 import DashboardProgreso from "@/pages/user/dashboard/DashboardProgreso.jsx";
+import DashboardMemoria from "@/pages/user/dashboard/DashboardMemoria.jsx";
+
+// Admin Pages
+/* import AdminRoute from "@/routes/adminRoute"; */
+
 
 // Layouts and Components
 import MainLayout from "@/layouts/MainLayout.jsx";
 import UserDashboardLayout from "@layouts/UserDashboardLayout.jsx";
 
 // Route Guards
-import ProtectedRoute from "@/components/auth/protectedRoute.jsx";
-import AdminPanel from "@/pages/admin/adminPanel.jsx";
 import UserRoute from "@/components/auth/userRoute.jsx";
+import ProtectedRoute from "@/components/auth/protectedRoute.jsx";
+import AdminUsers from "@/pages/admin/AdminUsers.jsx";
+import AdminLayout from "@/layouts/AdminLayout.jsx";
 
 
 
-const AdminRoute = ({ children }) => {
-  const token = localStorage.getItem("adminToken");
-  const role = JSON.parse(localStorage.getItem("adminUser") || "{}")?.role;
+export const AdminRoute = ({ children }) => {
+  const { user, token, loading } = useAuth();
 
-  if (!token || role !== "admin") return <Navigate to="/login-register" replace />;
+  if (loading) return null;
+
+  if (!token || user?.role !== "admin") {
+    return <Navigate to="/login-register" replace />;
+  }
+
   return children;
 };
 
@@ -60,34 +70,37 @@ export default function App() {
 
 
         <Route path="/login-register" element={<LoginRegister />} />
-        
+
       </Route>
 
 
       {/* USER DASHBOARD*/}
-      <Route path="/dashboard/*" element={
-          <ProtectedRoute>
-            <UserDashboardLayout />
-          </ProtectedRoute>
-        }>
+      <Route element={<ProtectedRoute redirectTo="/login-register" />}>
+        <Route path="/dashboard" element={<UserDashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+          <Route path="foro" element={<DashboardForo />} />
+          <Route path="perfil" element={<DashboardPerfil />} />
+          <Route path="programas" element={<DashboardProgramas />} />
+          <Route path="progreso" element={<DashboardProgreso />} />
+          <Route path="memoria" element={<DashboardMemoria />} />
 
-        <Route index element={<DashboardHome />} />
-        <Route path="foro" element={<DashboardForo /> }/>
-        <Route path="perfil" element={<DashboardPerfil />} />
-        <Route path="programas" element={<DashboardProgramas />} />
-        <Route path="progreso" element={<DashboardProgreso />} />
+        </Route>
       </Route>
-    
+
 
       {/* ADMIN */}
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <AdminPanel />
-          </AdminRoute>
-        }
-      />
+
+      {/* <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminUsers />} />
+        </Route>
+      </Route> */}
+      {/* ADMIN */}
+      <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminUsers />} />
+        </Route>
+      </Route>
 
       {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/" replace />} />

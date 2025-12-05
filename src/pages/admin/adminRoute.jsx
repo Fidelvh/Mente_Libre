@@ -2,11 +2,15 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/context/authContext.jsx';
 
+
 export default function AdminRoute() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (!user) return <Navigate to="/acceso" />; // no logueado
-  if (user.role !== 'admin') return <Navigate to="/" />; // no es admin
+  if (loading) return null;
 
-  return <Outlet />; // renderiza rutas hijas
+  if (!user || user.role !== "admin") {
+    return <Navigate to="/dasboard" replace />;
+  }
+
+  return <Outlet />;
 }
