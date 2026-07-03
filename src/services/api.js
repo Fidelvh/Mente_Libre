@@ -1,30 +1,12 @@
 // src/services/api.js
+import api from "@/services/axios";
 
-
-const API_URL = 'http://localhost:4000/api';
-
-
-export const apiRequest = async (endpoint, method = 'GET', body = null, token = null) => {
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-
-  const res = await fetch(`${API_URL}${endpoint}`, {
+export const apiRequest = async (endpoint, method = "GET", body = null) => {
+  const res = await api({
+    url: endpoint,
     method,
-    headers,
-    body: body ? JSON.stringify(body) : null,
+    data: body,
   });
 
-  let data = null;
-const text = await res.text();
-
-if (text) {
-  data = JSON.parse(text);
-}
-
-if (!res.ok) throw new Error(data?.error || 'Error en la solicitud');
-return data;
-
+  return res.data;
 };
-

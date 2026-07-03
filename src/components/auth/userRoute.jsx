@@ -1,6 +1,6 @@
 // src/components/auth/userRoute.jsx
 import { useAuth } from "@/context/authContext";
-import { Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 export default function UserRoute({ children }) {
   const { user, token } = useAuth();

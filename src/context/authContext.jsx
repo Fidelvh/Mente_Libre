@@ -1,29 +1,50 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/services/axios";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // ===============================
+  // USER (defensivo)
+  // ===============================
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem("user");
+      if (!saved || saved === "undefined") return null;
+      return JSON.parse(saved);
+    } catch (error) {
+      console.warn("AuthContext: user corrupto en localStorage, limpiando");
+      localStorage.removeItem("user");
+      return null;
+    }
   });
 
-  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+  // ===============================
+  // TOKEN (defensivo)
+  // ===============================
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem("token");
+    return savedToken && savedToken !== "undefined" ? savedToken : null;
+  });
+
   const [loading, setLoading] = useState(true);
 
-  // ✅ Configurar axios automáticamente cuando cambie el token
+  // ===============================
+  // Activar token en Axios
+  // ===============================
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       localStorage.setItem("token", token);
     } else {
-      delete axios.defaults.headers.common["Authorization"];
+      delete api.defaults.headers.common["Authorization"];
       localStorage.removeItem("token");
     }
   }, [token]);
 
-  // ✅ FUNCIÓN ASYNC CORRECTA (AQUÍ ESTABA EL ERROR)
+  // ===============================
+  // Cargar sesión activa
+  // ===============================
   const fetchMe = async () => {
     if (!token) {
       setLoading(false);
@@ -31,63 +52,54 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.get(
-        "http://localhost:4000/api/auth/me",
-        {
-          headers: { "Cache-Control": "no-cache" }
-        }
-      );
-
-      console.log("✅ USER DESDE /auth/me:", res.data);
-
-      setUser(res.data);
-      localStorage.setItem("user", JSON.stringify(res.data));
-
-    } catch (err) {
-      console.warn("⚠️ Token inválido, cerrando sesión.");
+      const res = await api.get("/auth/me");
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    } catch (error) {
       logout();
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Ejecutar al cargar o cambiar token
   useEffect(() => {
     fetchMe();
   }, [token]);
 
-  // ✅ Registro
+  // ===============================
+  // REGISTRO
+  // ===============================
   const register = async (name, email, password) => {
-    const res = await axios.post("http://localhost:4000/api/auth/register", {
+    const res = await api.post("/auth/register", {
       name,
       email,
       password,
     });
 
-    const { user, token } = res.data;
+    setUser(res.data.user);
+    setToken(res.data.token);
 
-    setUser(user);
-    setToken(token);
-
-    return user;
+    return res.data.user;
   };
 
-  // ✅ Login
+  // ===============================
+  // LOGIN
+  // ===============================
   const login = async (email, password) => {
-    const res = await axios.post("http://localhost:4000/api/auth/login", {
+    const res = await api.post("/auth/login", {
       email,
       password,
     });
 
-    const { user, token } = res.data;
+    setUser(res.data.user);
+    setToken(res.data.token);
 
-    setUser(user);
-    setToken(token);
-
-    return user;
+    return res.data.user;
   };
 
-  // ✅ Logout
+  // ===============================
+  // LOGOUT
+  // ===============================
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -96,6 +108,9 @@ export const AuthProvider = ({ children }) => {
     window.location.href = "/";
   };
 
+  // ===============================
+  // PROVIDER
+  // ===============================
   return (
     <AuthContext.Provider
       value={{

@@ -1,14 +1,16 @@
-import { Router } from 'express';
-import { deleteUser, listUsers, createUser } from '../controllers/users.controller.js';
-import { requireAuth } from '../middlewares/auth.js';
-
+import { Router } from "express";
+import { requireAuth } from "../middlewares/auth.js";
+import {
+  deleteUser,
+  listUsers,
+  createUser
+} from "../controllers/users.controller.js";
 
 export const userRouter = Router();
 
+// Público -> crear usuario
+userRouter.post("/", createUser);
 
-//  Rutas públicas, Crear nuevo usuario,
-userRouter.post('/', createUser);
-
-// 🔐 Rutas protegidas (solo admin o usuarios logueados)
-userRouter.get('/', requireAuth, listUsers); // listar usuarios (requiere token)
-userRouter.delete('/:id', requireAuth, deleteUser); // eliminar usuario (requiere token)
+// Protegido -> listar y eliminar
+userRouter.get("/", requireAuth, listUsers);
+userRouter.delete("/:id", requireAuth, deleteUser);

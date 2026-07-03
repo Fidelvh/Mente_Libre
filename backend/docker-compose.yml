@@ -1,9 +1,18 @@
 
 services:
+  api:
+    build: .
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: unless-stopped
+
   db:
     image: postgres:15
     container_name: mente_db
-    restart: always
     ports:
       - "5432:5432"
     environment:
@@ -15,3 +24,4 @@ services:
 
 volumes:
   postgres_data:
+    name: mente_postgres_data

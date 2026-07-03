@@ -15,13 +15,13 @@ export default function LoginRegister() {
   });
 
   // 🔐 LIMPIEZA TOTAL DE SESIÓN AL ENTRAR
-  useEffect(() => {
+ /*  useEffect(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminUser");
   }, []);
-
+ */
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };

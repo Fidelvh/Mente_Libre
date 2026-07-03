@@ -2,6 +2,7 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
 import plugin from 'tailwindcss/plugin';
 
+// Esto hace que Tailwind procese los archivos indicados para generar los estilos
 export default {
   content: [
     "./index.html",
@@ -13,9 +14,10 @@ export default {
       colors: {
         primary: {
           DEFAULT: '#5FA8F4', // azul suave
-          600: '#4F9DD6',
+          600: '#4F9DD6', // azul medio
+          700: '#3F8CC0'  // azul oscuro
         },
-        copper: '#C18A39',
+        copper: '#C18A39', // color cobre personalizado
         accent: '#D5C2B2',
         mlbg: '#F1F6F9',
         mlmuted: '#D5C2B2',

@@ -1,6 +1,6 @@
 // backend/src/controllers/dashboard.controller.js
 
-import { prisma } from '../libs/prisma.js';
+import { prisma }  from '../libs/prisma.js';
 
 export const getDashboard = async (req, res) => {
   try {

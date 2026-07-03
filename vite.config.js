@@ -4,7 +4,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+// Esto hace que Vite use el puerto 5173 y no cambie aunque esté ocupado
 export default defineConfig({
+  server: {
+    port: 5173,
+    strictPort: true,
+  },
   plugins: [react()],
   resolve: {
     alias: {

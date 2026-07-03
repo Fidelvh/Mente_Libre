@@ -1,6 +1,7 @@
 import { prisma } from "../libs/prisma.js";
 
 
+
 export const blockUserMiddleware = async (req, res, next) => {
   try {
     const userId = req.user?.id;

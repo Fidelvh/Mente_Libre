@@ -1,4 +1,5 @@
-import { prisma } from '../libs/prisma.js';
+import { prisma } from "../libs/prisma.js";
+
 
 
 // Listar todas las notas del usuario autenticado

@@ -4,7 +4,7 @@ import { requireAuth } from '../middlewares/auth.js'
 import { requireAdmin } from '../middlewares/role.js'
 //import { getAdminPanel } from '../controllers/admin.controller.js'
 import { listUsersAdmin, updateUserRole } from '../controllers/admin.controller.js'
-import { prisma } from '../libs/prisma.js';
+import { prisma }  from '../libs/prisma.js';
 
 
 export const adminRouter = Router();

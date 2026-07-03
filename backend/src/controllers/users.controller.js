@@ -1,82 +1,87 @@
-import { prisma } from '../libs/prisma.js';
-import { hashPassword } from '../utils/hash.js';
-import { signJwt } from '../utils/jwt.js';
+import { prisma } from "../libs/prisma.js";
+import { sendVerificationEmail } from "../utils/email.js";
+import crypto from "crypto";
 
-// Crear nuevo usuario (Público)
+// =======================================================
+//  Crear usuario (registro)
+// =======================================================
 export const createUser = async (req, res) => {
   try {
     const { email, password, name } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
+    // Verificar si ya existe
+    const existing = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existing) {
+      return res.status(409).json({ error: "El correo ya está registrado" });
     }
 
-    // Verificar si el email ya está registrado
-    const exists = await prisma.user.findUnique({ where: { email } });
-    if (exists) {
-      return res.status(409).json({ error: 'El email ya está registrado' });
-    }
-
-    // Encriptar la contraseña
-    const passwordHash = await hashPassword(password);
-
-    // Crear el usuario
+    // Crear usuario
     const user = await prisma.user.create({
       data: {
         email,
-        passwordHash,
-        name: name ?? null
+        password,
+        name,
       },
+    });
+
+    // Crear token de verificación
+    const token = crypto.randomBytes(32).toString("hex");
+
+    await prisma.emailVerificationToken.create({
+      data: { token, userId: user.id },
+    });
+
+    // Enviar correo de verificación
+    await sendVerificationEmail(user.email, token);
+
+    return res.status(201).json({
+      message: "Usuario creado. Revisa tu correo para verificar tu cuenta.",
+    });
+  } catch (err) {
+    console.error("Error createUser:", err);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+// =======================================================
+//  Listar usuarios
+// =======================================================
+export const listUsers = async (_req, res) => {
+  try {
+    const users = await prisma.user.findMany({
       select: {
         id: true,
         email: true,
         name: true,
+        role: true,
         createdAt: true,
-        updatedAt: true,
-        role: true
-      }
+      },
     });
 
-    // Generar token JWT
-    const token = signJwt({ sub: user.id, email: user.email, role: user.role });
-
-    return res.status(201).json({
-      message: 'Usuario creado exitosamente',
-      user,
-      token
-    });
-  } catch (error) {
-    console.error('❌ Error en createUser:', error);
-    return res.status(500).json({ error: 'Error interno al crear el usuario' });
+    return res.json(users);
+  } catch (err) {
+    console.error("Error listUsers:", err);
+    return res.status(500).json({ error: "Error al listar usuarios" });
   }
 };
 
-export const listUsers = async (req, res) => {
-  try {
-    const users = await prisma.user.findMany({
-      select: { id: true, email: true, name: true, createdAt: true }
-    });
-    return res.json({ users });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Error al listar usuarios' });
-  }
-};
-
+// =======================================================
+//  Eliminar usuario por ID
+// =======================================================
 export const deleteUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
 
-    const user = await prisma.user.findUnique({ where: { id: Number(id) } });
-    if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
+    await prisma.user.delete({
+      where: { id },
+    });
 
-    await prisma.user.delete({ where: { id: Number(id) } });
-
-    return res.json({ message: `Usuario con ID ${id} eliminado correctamente` });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Error al eliminar el usuario' });
+    return res.json({ message: "Usuario eliminado" });
+  } catch (err) {
+    console.error("Error deleteUser:", err);
+    return res.status(500).json({ error: "Error al eliminar usuario" });
   }
 };

@@ -1,7 +1,5 @@
 # React + Vite
-
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
@@ -18,3 +16,4 @@ npm install -D typescript ts-node-dev prisma @types/express @types/jsonwebtoken 
 
 //lsof -i :4000  
 kill -9
+lsof -iTCP -sTCP:LISTEN | grep node

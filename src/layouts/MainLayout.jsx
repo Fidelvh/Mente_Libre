@@ -5,16 +5,19 @@ import Footer from "@/components/navigation/footer.jsx";
 
 export default function MainLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#0d1117] text-gray-100 antialiased">
+    <div className="main-layout">
       {/* NAVBAR */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-[#0d1117]/90 backdrop-blur-lg shadow-md border-b border-white/5">
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#0d1117]/10 backdrop-blur-lg shadow-md  border-white/5 border-b">
         <Navbar />
       </header>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 w-full max-w-screen-2xl mx-auto pt-24 px-4 md:px-8">
-        <Outlet />
+      <main className="flex-1 w-full pt-24">
+        <div className="ml-container">
+          <Outlet />
+        </div>
       </main>
+
 
       {/* FOOTER */}
       <footer className="mt-12">

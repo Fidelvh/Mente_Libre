@@ -1,5 +1,5 @@
 // backend/src/controllers/admin.controller.js
-import { prisma } from '../libs/prisma.js';
+import { prisma }  from '../libs/prisma.js';
 
 // Listar usuarios con filtros y paginación
 export const listUsersAdmin = async (req, res) => {

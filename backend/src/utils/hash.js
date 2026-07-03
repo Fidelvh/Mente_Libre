@@ -1,3 +1,4 @@
+//src/backend/utils/hash.js
 import bcrypt from 'bcryptjs';
 
 export const hashPassword = (plain) => bcrypt.hash(plain, 12);

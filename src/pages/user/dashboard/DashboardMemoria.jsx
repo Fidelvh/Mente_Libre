@@ -1,326 +1,169 @@
-// src/pages/user/dashboard/DashboardMemoria.jsx
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { apiRequest } from "@/services/api";
 
+// Memoria Viva – Editor tipo "Book / Chapters" (inspiración directa Dribbble)
 export default function DashboardMemoria() {
   const { token: contextToken, loading: authLoading } = useAuth();
-
-  // ✅ Fallback blindado
   const token = contextToken || localStorage.getItem("token");
 
   const [notes, setNotes] = useState([]);
+  const [activeNoteId, setActiveNoteId] = useState(null);
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [savingEdit, setSavingEdit] = useState(false);
-
   const [error, setError] = useState(null);
-
-  const [editingNote, setEditingNote] = useState(null);
-
-  const [showConfirmClear, setShowConfirmClear] = useState(false);
-  const [noteToDelete, setNoteToDelete] = useState(null);
 
   /* =========================
       CARGAR MEMORIAS
   ========================= */
   const loadNotes = async () => {
-    setError(null);
-
-    if (!token) {
-      setNotes([]);
-      setLoading(false);
-      return;
-    }
-
+    if (!token) return;
     try {
       setLoading(true);
       const data = await apiRequest("/notes", "GET", null, token);
-      setNotes(Array.isArray(data) ? data : data.notes || []);
-    } catch (err) {
-      console.error("Error cargando notas:", err);
-      setError(err?.message || "Error cargando memorias");
+      const list = Array.isArray(data) ? data : data.notes || [];
+      setNotes(list);
+      if (!activeNoteId && list.length > 0) selectNote(list[0]);
+    } catch {
+      setError("Error cargando memorias");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (authLoading) return;
-    loadNotes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!authLoading) loadNotes();
   }, [token, authLoading]);
 
   /* =========================
-        CREAR / EDITAR
+        ACCIONES
   ========================= */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
+  const selectNote = (note) => {
+    setActiveNoteId(note.id);
+    setTitle(note.title || "");
+    setContent(note.content || "");
+  };
 
-    if (!title.trim() || !content.trim()) {
-      setError("Título y contenido son requeridos.");
-      return;
-    }
+  const newNote = () => {
+    setActiveNoteId(null);
+    setTitle("");
+    setContent("");
+  };
 
-    if (!token) {
-      setError("Debes iniciar sesión.");
-      return;
-    }
-
+  const saveNote = async () => {
+    if (!title.trim() || !content.trim()) return;
     try {
-      if (editingNote) {
-        setSavingEdit(true);
-
-        await apiRequest(
-          `/notes/${editingNote.id}`,
-          "PUT",
-          {
-            title: title.trim(),
-            content: content.trim(),
-          },
-          token
-        );
+      setSaving(true);
+      if (activeNoteId) {
+        await apiRequest(`/notes/${activeNoteId}`, "PUT", { title, content }, token);
       } else {
-        setSaving(true);
-
-        await apiRequest(
-          "/notes",
-          "POST",
-          {
-            title: title.trim(),
-            content: content.trim(),
-          },
-          token
-        );
+        await apiRequest("/notes", "POST", { title, content }, token);
       }
-
-      setTitle("");
-      setContent("");
-      setEditingNote(null);
-
       await loadNotes();
-    } catch (err) {
-      console.error("Error guardando nota:", err);
-      setError(err?.message || "Error al guardar la nota.");
+    } catch {
+      setError("Error al guardar memoria");
     } finally {
       setSaving(false);
-      setSavingEdit(false);
     }
   };
 
-  /* =========================
-        UI STATES
-  ========================= */
-  if (authLoading) return <p className="p-6">Verificando sesión...</p>;
+  if (authLoading) return <p className="p-6">Verificando sesión…</p>;
+  if (!token) return <p className="p-6">Debes iniciar sesión.</p>;
 
-  if (!token)
-    return (
-      <div className="p-6 max-w-3xl mx-auto">
-        <h2 className="text-xl font-semibold mb-2">Memoria Viva</h2>
-        <p className="text-sm text-gray-600">
-          Debes iniciar sesión para acceder a tus memorias.
-        </p>
-      </div>
-    );
-
-  /* =========================
-            RENDER
-  ========================= */
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-2">Memoria Viva 🧠</h1>
-      <p className="text-sm text-gray-500 mb-4">
-        Escribe reflexiones, emociones y recuerdos conscientes.
-      </p>
-
-      {error && (
-        <div className="bg-red-100 text-red-800 p-3 rounded mb-4">
-          {error}
+    /* =========================
+        EDITOR CON TOOLBAR (MVP 1)
+    ========================= */
+    <div className="flex h-screen bg-neutral-100 dark:bg-neutral-900">
+      {/* SIDEBAR – LIBRO / CAPÍTULOS */}
+      <aside className="w-72 bg-neutral-900 text-neutral-100 flex flex-col">
+        <div className="px-6 py-6 text-xl font-semibold tracking-wide">
+          Memoria Viva
         </div>
-      )}
 
-      {/* ========================= FORM ========================= */}
-      <form onSubmit={handleSubmit} className="mb-6">
-        <input
-          className="w-full p-3 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white border mb-2"
-          placeholder="Título"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <button
+          onClick={newNote}
+          className="mx-4 mb-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-medium"
+        >
+          + Nueva Memoria
+        </button>
 
-        <textarea
-          className="w-full p-3 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white border mb-3 min-h-[120px]"
-          placeholder="Escribe tu memoria..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+        <div className="flex-1 overflow-y-auto px-2 space-y-1">
+          {loading ? (
+            <p className="text-sm text-neutral-400 px-4">Cargando…</p>
+          ) : notes.length === 0 ? (
+            <p className="text-sm text-neutral-400 px-4">Sin memorias aún</p>
+          ) : (
+            notes.map((note, index) => (
+              <button
+                key={note.id}
+                onClick={() => selectNote(note)}
+                className={`w-full text-left px-4 py-3 rounded-lg transition
+                  ${note.id === activeNoteId
+                    ? "bg-neutral-700 text-white"
+                    : "text-neutral-300 hover:bg-neutral-800"}`}
+              >
+                <div className="text-xs uppercase opacity-60">Memoria {index + 1}</div>
+                <div className="font-medium truncate">
+                  {note.title || "Sin título"}
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+      </aside>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="submit"
-            disabled={saving || savingEdit}
-            className="bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-semibold px-6 py-2 rounded-lg transition"
-          >
-            {saving || savingEdit
-              ? "Guardando..."
-              : editingNote
-              ? "Guardar cambios"
-              : "Guardar memoria"}
-          </button>
-
-          {editingNote && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditingNote(null);
-                setTitle("");
-                setContent("");
-              }}
-              className="px-4 py-2 rounded bg-slate-300 dark:bg-slate-700 text-black dark:text-white"
-            >
-              Cancelar edición
-            </button>
+      {/* CONTENIDO – LIBRO */}
+      <main className="flex-1 flex justify-center overflow-auto bg-[#0f1b2d] dark:bg-[#0b1423]">
+        <div className="w-full max-w-3xl my-12 bg-[#f8f9fb] dark:bg-[#0f1b2d] rounded-xl shadow-2xl px-12 py-10">
+          {error && (
+            <div className="bg-red-100 text-red-800 p-3 rounded mb-4">{error}</div>
           )}
 
-          <button
-            type="button"
-            onClick={() => setShowConfirmClear(true)}
-            className="px-4 py-2 rounded bg-amber-500 hover:bg-amber-600 text-white transition"
-          >
-            Limpiar texto
-          </button>
-
-          <div className="ml-auto text-xs text-gray-500">
-            {notes.length} memorias
+          {/* TOOLBAR */}
+          <div className="flex items-center gap-2 mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-3">
+            <button type="button" onClick={() => setContent(content + "**texto**")} className="px-2 py-1 text-sm rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold">B</button>
+            <button type="button" onClick={() => setContent(content + "*texto*")} className="px-2 py-1 text-sm rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 italic">I</button>
+            <button type="button" onClick={() => setContent(content + `
+# Título
+`)} className="px-2 py-1 text-sm rounded hover:bg-neutral-200 dark:hover:bg-neutral-700">H1</button>
+            <button type="button" onClick={() => setContent(content + `
+## Subtítulo
+`)} className="px-2 py-1 text-sm rounded hover:bg-neutral-200 dark:hover:bg-neutral-700">H2</button>
+            <button type="button" onClick={() => setContent(content + `
+- item
+`)} className="px-2 py-1 text-sm rounded hover:bg-neutral-200 dark:hover:bg-neutral-700">• Lista</button>
           </div>
-        </div>
-      </form>
 
-      <hr className="my-4" />
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Título del capítulo"
+            className="w-full mb-8 text-4xl font-serif font-semibold bg-transparent border-none focus:outline-none text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400"
+          />
 
-      {/* ========================= LISTADO ========================= */}
-      {loading ? (
-        <p>Cargando tus memorias...</p>
-      ) : notes.length === 0 ? (
-        <p className="text-sm text-gray-500">
-          Aún no has registrado ninguna memoria.
-        </p>
-      ) : (
-        <div className="grid gap-4">
-          {notes.map((n) => (
-            <article
-              key={n.id}
-              className="border p-4 rounded bg-white dark:bg-gray-800 shadow"
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Escribe como si fuera un libro…"
+            className="w-full min-h-[60vh] resize-none bg-transparent font-serif text-lg leading-loose focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400"
+          />
+
+          <div className="mt-10 flex justify-end">
+            <button
+              onClick={saveNote}
+              disabled={saving}
+              className="px-8 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-medium disabled:opacity-50"
             >
-              <div className="flex justify-between">
-                <div>
-                  <h3 className="font-bold">{n.title || "Sin título"}</h3>
-                  <p className="text-xs text-gray-400">
-                    {new Date(n.createdAt).toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      setEditingNote(n);
-                      setTitle(n.title);
-                      setContent(n.content);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                    className="text-emerald-500 text-sm hover:text-emerald-700"
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    onClick={() => setNoteToDelete(n)}
-                    className="text-red-500 text-sm hover:text-red-700"
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </div>
-
-              <p className="mt-3 text-sm whitespace-pre-line">{n.content}</p>
-            </article>
-          ))}
-        </div>
-      )}
-
-      {/* ========================= MODAL LIMPIAR ========================= */}
-      {showConfirmClear && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl w-full max-w-md">
-            <h2 className="text-lg font-semibold mb-2">
-              ¿Seguro que quieres limpiar?
-            </h2>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowConfirmClear(false)}
-                className="px-4 py-2 bg-gray-300 dark:bg-slate-700 rounded"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={() => {
-                  setContent("");
-                  setShowConfirmClear(false);
-                }}
-                className="px-4 py-2 bg-red-500 text-white rounded"
-              >
-                Sí, limpiar
-              </button>
-            </div>
+              {saving ? "Guardando…" : "Guardar Memoria"}
+            </button>
           </div>
         </div>
-      )}
-
-      {/* ========================= MODAL ELIMINAR ========================= */}
-      {noteToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl w-full max-w-md">
-            <h2 className="text-lg font-semibold mb-2">
-              ¿Eliminar esta memoria?
-            </h2>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setNoteToDelete(null)}
-                className="px-4 py-2 bg-gray-300 dark:bg-slate-700 rounded"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={async () => {
-                  try {
-                    await apiRequest(
-                      `/notes/${noteToDelete.id}`,
-                      "DELETE",
-                      null,
-                      token
-                    );
-                    setNoteToDelete(null);
-                    await loadNotes();
-                  } catch {
-                    setError("No se pudo eliminar la memoria.");
-                  }
-                }}
-                className="px-4 py-2 bg-red-500 text-white rounded"
-              >
-                Sí, eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </main>
     </div>
   );
 }

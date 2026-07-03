@@ -1,7 +1,7 @@
 // check-imports-advanced.js
 // Revisión avanzada de imports en React + Vite
 
-import fs from "fs";
+import fs from "fs"; 
 import path from "path";
 
 const SRC = path.resolve("./src");

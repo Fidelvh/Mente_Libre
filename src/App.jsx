@@ -1,5 +1,6 @@
 // src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
+import ScrollToTop from "./components/system/ScrollToTop";
 
 // Public Pages
 import Home from "@/pages/home.jsx";
@@ -19,13 +20,16 @@ import LoginRegister from "@/pages/user/loginRegister.jsx";
 // User Pages dashboard
 import DashboardHome from "@/pages/user/dashboard/DashboardHome.jsx";
 import DashboardForo from "@/pages/user/dashboard/DashboardForo.jsx";
-import DashboardPerfil from "@/pages/user/dashboard/DashboardPerfil.jsx";
+//import DashboardPerfil from "@/pages/user/dashboard/DashboardPerfil.jsx";
 import DashboardProgramas from "@/pages/user/dashboard/DashboardProgramas.jsx";
 import DashboardProgreso from "@/pages/user/dashboard/DashboardProgreso.jsx";
 import DashboardMemoria from "@/pages/user/dashboard/DashboardMemoria.jsx";
 
-// Admin Pages
-/* import AdminRoute from "@/routes/adminRoute"; */
+// User Dashboard Profile
+import Profile from "@/pages/user/dashboard/profile/Profile.jsx";
+
+// Admin Pages <-- IMPORT ADMIN ROUTE
+import AdminRoute from "@/components/auth/AdminRoute.jsx";  
 
 
 // Layouts and Components
@@ -40,7 +44,7 @@ import AdminLayout from "@/layouts/AdminLayout.jsx";
 
 
 
-export const AdminRoute = ({ children }) => {
+/* export const AdminRoute = ({ children }) => {
   const { user, token, loading } = useAuth();
 
   if (loading) return null;
@@ -50,60 +54,51 @@ export const AdminRoute = ({ children }) => {
   }
 
   return children;
-};
+}; */
 
 export default function App() {
   return (
-    <Routes>
-      {/* PÚBLICAS */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/contacto" element={<Contacto />} />
-        <Route path="/foro" element={<Foro />} />
-        <Route path="/filosofia" element={<Filosofia />} />
+    <>
+      <ScrollToTop />
 
+      <Routes>
+        {/* PÚBLICAS */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/foro" element={<Foro />} />
+          <Route path="/filosofia" element={<Filosofia />} />
 
-        <Route path="/programas" element={<Programas />} />
-        <Route path="/programas/audio" element={<Audio />} />
-        <Route path="/programas/meditaciones" element={<Meditaciones />} />
-        <Route path="/programas/eventos" element={<Eventos />} />
+          <Route path="/programas" element={<Programas />} />
+          <Route path="/programas/audio" element={<Audio />} />
+          <Route path="/programas/meditaciones" element={<Meditaciones />} />
+          <Route path="/programas/eventos" element={<Eventos />} />
 
-
-        <Route path="/login-register" element={<LoginRegister />} />
-
-      </Route>
-
-
-      {/* USER DASHBOARD*/}
-      <Route element={<ProtectedRoute redirectTo="/login-register" />}>
-        <Route path="/dashboard" element={<UserDashboardLayout />}>
-          <Route index element={<DashboardHome />} />
-          <Route path="foro" element={<DashboardForo />} />
-          <Route path="perfil" element={<DashboardPerfil />} />
-          <Route path="programas" element={<DashboardProgramas />} />
-          <Route path="progreso" element={<DashboardProgreso />} />
-          <Route path="memoria" element={<DashboardMemoria />} />
-
+          <Route path="/login-register" element={<LoginRegister />} />
         </Route>
-      </Route>
 
-
-      {/* ADMIN */}
-
-      {/* <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminUsers />} />
+        {/* USER DASHBOARD */}
+        <Route element={<ProtectedRoute redirectTo="/login-register" />}>
+          <Route path="/dashboard" element={<UserDashboardLayout />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="foro" element={<DashboardForo />} />
+            <Route path="programas" element={<DashboardProgramas />} />
+            <Route path="progreso" element={<DashboardProgreso />} />
+            <Route path="memoria" element={<DashboardMemoria />} />
+            <Route path="perfil" element={<Profile />} />
+          </Route>
         </Route>
-      </Route> */}
-      {/* ADMIN */}
-      <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminUsers />} />
-        </Route>
-      </Route>
 
-      {/* FALLBACK */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* ADMIN */}
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminUsers />} />
+          </Route>
+        </Route>
+
+        {/* FALLBACK */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }

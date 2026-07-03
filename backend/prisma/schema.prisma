@@ -8,17 +8,35 @@ generator client {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
   name         String?
   passwordHash String
-  role         String   @default("user")
-  isBlocked    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  role         String  @default("user")
+
+  //Seguridad avanzada
+  emailVerified       Boolean   @default(false)
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+
+  //Bloqueo administrativo
+  isBlocked Boolean @default(false)
+
+  //Relaciones de seguridad
+  refreshTokens     RefreshToken[]
+  emailVerification EmailVerification?
+  passwordResets    PasswordReset[]
+
+  //Auditoría (si ya tienes AuditLog)
+  auditLogs AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   notes        Note[]
   auditActions AuditLog[] @relation("actor")
+
+  profile   Profile?
 }
 
 model Note {
@@ -38,4 +56,57 @@ model AuditLog {
   action    String
   targetId  Int?
   createdAt DateTime @default(now())
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+model RefreshToken {
+  id         Int      @id @default(autoincrement())
+  tokenHash  String   @unique // hashed token
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  revoked    Boolean  @default(false)
+  replacedBy Int? // id of the new refresh token after rotation
+}
+
+model EmailVerification {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  tokenHash String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model PasswordReset {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  tokenHash String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum TonePreference {
+  REFLEXIVO
+  CALMO
+  DIRECTO
+  EMPATICO
+}
+
+
+model Profile {
+  id          Int   @id @default(autoincrement())
+  userId      Int   @unique
+
+  displayName String?
+  rhythm      String?
+  tone        String?
+  pauseLevel  Int?
+  tonePreferences String[]  
+  paused          Boolean  @default(false)
+
+  user        User     @relation(fields: [userId], references: [id])
 }

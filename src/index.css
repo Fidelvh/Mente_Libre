@@ -21,6 +21,7 @@
     font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     background-color: var(--ml-bg);
     margin: 0;
+    overflow-x: hidden;
   }
   h1,h2,h3 { font-family: 'Cormorant Garamond', serif; }
 }
@@ -36,4 +37,37 @@
   .bg-mlbg { background-color: var(--ml-bg); }
   .text-copper { color: var(--ml-accent); }
   .ml-hero-height { height: calc(100vh - 5rem); }
+}
+/* Compensa navbar fixed al navegar por anclas */
+section[id] {
+  scroll-margin-top: 6rem; /* coincide con pt-24 del <main> */
+}
+
+.footer-link {
+  color: rgb(75, 85, 99); /* gray-600 */
+  transition: color 0.2s ease;
+}
+
+.dark .footer-link {
+  color: rgb(156, 163, 175); /* gray-400 */
+}
+
+.footer-link:hover {
+  color: rgb(17, 24, 39); /* gray-900 */
+}
+
+.dark .footer-link:hover {
+  color: rgb(243, 244, 246); /* gray-100 */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+  }
 }
